@@ -69,11 +69,11 @@ class GlassCard extends StatelessWidget {
   final bool isSelected;
 
   const GlassCard({
-    Key? key,
+    super.key,
     required this.child,
     required this.isDarkMode,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

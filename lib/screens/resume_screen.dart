@@ -1,21 +1,25 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ibrahim_lokman_info/widgets/glass_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ResumeScreen extends StatefulWidget {
   final bool isDarkMode;
-  final VoidCallback toggleTheme;
+  // final VoidCallback toggleTheme;
 
-  const ResumeScreen(
-      {Key? key, required this.isDarkMode, required this.toggleTheme})
-      : super(key: key);
+  const ResumeScreen({
+    super.key,
+    required this.isDarkMode,
+    // required this.toggleTheme,
+  });
 
   @override
-  _ResumeScreenState createState() => _ResumeScreenState();
+  ResumeScreenState createState() => ResumeScreenState();
 }
 
-class _ResumeScreenState extends State<ResumeScreen> {
+class ResumeScreenState extends State<ResumeScreen> {
   final ScrollController _scrollController = ScrollController();
   final Map<String, GlobalKey> _sectionKeys = {
     'Skills': GlobalKey(),
@@ -60,11 +64,16 @@ class _ResumeScreenState extends State<ResumeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // floatingActionButton: Switch(
+      //   value: widget.isDarkMode,
+      //   onChanged: (_) => widget.toggleTheme(),
+      //   activeColor: Colors.white,
+      // ),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           SliverAppBar(
-            title: const Text('Ibrahim Lokman'),
+            title: null,
             pinned: true,
             floating: false,
             backgroundColor: Colors.transparent,
@@ -74,34 +83,6 @@ class _ResumeScreenState extends State<ResumeScreen> {
                 child: Container(color: Colors.transparent),
               ),
             ),
-            // actions: [
-            //   ..._sectionKeys.keys.map(
-            //     (section) => TextButton(
-            //       onPressed: () => _scrollToSection(section),
-            //       child: Text(
-            //         section,
-            //         style: TextStyle(
-            //           color: _selectedSection == section
-            //               ? widget.isDarkMode
-            //                   ? Colors.white
-            //                   : const Color.fromARGB(255, 97, 31, 110)
-            //               : widget.isDarkMode
-            //                   ? Colors.white
-            //                   : Colors.black,
-            //           fontWeight: _selectedSection == section
-            //               ? FontWeight.bold
-            //               : FontWeight.normal,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            //   Switch(
-            //     value: widget.isDarkMode,
-            //     onChanged: (_) => widget.toggleTheme(),
-            //     activeColor: Colors.white,
-            //   ),
-            // ],
-
             actions: [
               ..._sectionKeys.keys.map(
                 (section) => Padding(
@@ -133,11 +114,6 @@ class _ResumeScreenState extends State<ResumeScreen> {
                   ),
                 ),
               ),
-              Switch(
-                value: widget.isDarkMode,
-                onChanged: (_) => widget.toggleTheme(),
-                activeColor: Colors.white,
-              ),
             ],
           ),
           SliverToBoxAdapter(
@@ -157,48 +133,50 @@ class _ResumeScreenState extends State<ResumeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GlassCard(
-                        child: _buildContactInfo(),
-                        isDarkMode: widget.isDarkMode),
+                        isDarkMode: widget.isDarkMode,
+                        child: _buildContactInfo()),
                     const SizedBox(height: 20),
                     GlassCard(
-                        child: _buildCareerObjective(),
-                        isDarkMode: widget.isDarkMode),
+                        isDarkMode: widget.isDarkMode,
+                        child: _buildCareerObjective()),
                     const SizedBox(height: 20),
                     GlassCard(
-                      child: _buildSkills(),
                       isDarkMode: widget.isDarkMode,
                       key: _sectionKeys['Skills'],
                       isSelected: _selectedSection == 'Skills',
+                      child: _buildSkills(),
                     ),
                     // ... other sections
                     const SizedBox(height: 20),
                     GlassCard(
-                      child: _buildWorkExperience(),
                       isDarkMode: widget.isDarkMode,
                       key: _sectionKeys['Experience'],
                       isSelected: _selectedSection == 'Experience',
+                      child: _buildWorkExperience(),
                     ),
                     const SizedBox(height: 20),
                     GlassCard(
-                        child: _buildOnlineCourses(),
-                        isDarkMode: widget.isDarkMode),
-                    const SizedBox(height: 20),
-                    GlassCard(
-                        child: _buildAchievement(),
-                        isDarkMode: widget.isDarkMode),
-                    const SizedBox(height: 20),
-                    GlassCard(
-                      child: _buildProjects(),
                       isDarkMode: widget.isDarkMode,
-                      key: _sectionKeys['Projects'],
-                      isSelected: _selectedSection == 'Projects',
+                      child: _buildOnlineCourses(),
                     ),
                     const SizedBox(height: 20),
                     GlassCard(
-                      child: _buildEducation(),
+                      isDarkMode: widget.isDarkMode,
+                      child: _buildAchievement(),
+                    ),
+                    const SizedBox(height: 20),
+                    GlassCard(
                       isDarkMode: widget.isDarkMode,
                       key: _sectionKeys['Education'],
                       isSelected: _selectedSection == 'Education',
+                      child: _buildEducation(),
+                    ),
+                    const SizedBox(height: 20),
+                    GlassCard(
+                      isDarkMode: widget.isDarkMode,
+                      key: _sectionKeys['Projects'],
+                      isSelected: _selectedSection == 'Projects',
+                      child: _buildProjects(),
                     ),
                   ],
                 ),
@@ -210,260 +188,64 @@ class _ResumeScreenState extends State<ResumeScreen> {
     );
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     // appBar: AppBar(
-  //     //   title: const Text('Ibrahim Lokman'),
-  //     //   backgroundColor: Colors.transparent,
-  //     //   elevation: 0,
-  //     //   flexibleSpace: ClipRect(
-  //     //     child: BackdropFilter(
-  //     //       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-  //     //       child: Container(color: Colors.transparent),
-  //     //     ),
-  //     //   ),
-  //     //   actions: [
-  //     //     ..._sectionKeys.keys.map(
-  //     //       (section) => TextButton(
-  //     //         onPressed: () => _scrollToSection(section),
-  //     //         child: Text(
-  //     //           section,
-  //     //           style: TextStyle(
-  //     //             color: _selectedSection == section
-  //     //                 ? Colors.white
-  //     //                 : Colors.white70,
-  //     //             fontWeight: _selectedSection == section
-  //     //                 ? FontWeight.bold
-  //     //                 : FontWeight.normal,
-  //     //           ),
-  //     //         ),
-  //     //       ),
-  //     //     ),
-  //     //     Switch(
-  //     //       value: widget.isDarkMode,
-  //     //       onChanged: (_) => widget.toggleTheme(),
-  //     //       activeColor: Colors.white,
-  //     //     ),
-  //     //   ],
-  //     // ),
-  //     // extendBodyBehindAppBar: true,
-
-  //     body: Container(
-  //       decoration: BoxDecoration(
-  //         gradient: LinearGradient(
-  //           begin: Alignment.topLeft,
-  //           end: Alignment.bottomRight,
-  //           colors: widget.isDarkMode
-  //               ? [Colors.grey[900]!, Colors.blueGrey[900]!]
-  //               : [Colors.blue[200]!, Colors.purple[200]!],
-  //         ),
-  //       ),
-  //       child: SingleChildScrollView(
-  //         controller: _scrollController,
-  //         padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             GlassCard(
-  //                 child: _buildContactInfo(), isDarkMode: widget.isDarkMode),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //                 child: _buildCareerObjective(),
-  //                 isDarkMode: widget.isDarkMode),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //               child: _buildSkills(),
-  //               isDarkMode: widget.isDarkMode,
-  //               key: _sectionKeys['Skills'],
-  //               isSelected: _selectedSection == 'Skills',
-  //             ),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //               child: _buildWorkExperience(),
-  //               isDarkMode: widget.isDarkMode,
-  //               key: _sectionKeys['Experience'],
-  //               isSelected: _selectedSection == 'Experience',
-  //             ),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //                 child: _buildOnlineCourses(), isDarkMode: widget.isDarkMode),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //                 child: _buildAchievement(), isDarkMode: widget.isDarkMode),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //               child: _buildProjects(),
-  //               isDarkMode: widget.isDarkMode,
-  //               key: _sectionKeys['Projects'],
-  //               isSelected: _selectedSection == 'Projects',
-  //             ),
-  //             const SizedBox(height: 20),
-  //             GlassCard(
-  //               child: _buildEducation(),
-  //               isDarkMode: widget.isDarkMode,
-  //               key: _sectionKeys['Education'],
-  //               isSelected: _selectedSection == 'Education',
-  //             ),
-
-  //           ],
-  //         ),
-  //       ),
-  //       // child: SingleChildScrollView(
-  //       //   controller: _scrollController,
-  //       //   padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
-  //       //   child: Column(
-  //       //     crossAxisAlignment: CrossAxisAlignment.start,
-  //       //     children: [
-  //       //       GlassCard(
-  //       //           child: _buildContactInfo(), isDarkMode: widget.isDarkMode),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //           child: _buildCareerObjective(),
-  //       //           isDarkMode: widget.isDarkMode),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //         child: _buildSkills(),
-  //       //         isDarkMode: widget.isDarkMode,
-  //       //         key: _sectionKeys['skills'],
-  //       //       ),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //         child: _buildWorkExperience(),
-  //       //         isDarkMode: widget.isDarkMode,
-  //       //         key: _sectionKeys['experience'],
-  //       //       ),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //           child: _buildOnlineCourses(), isDarkMode: widget.isDarkMode),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //           child: _buildAchievement(), isDarkMode: widget.isDarkMode),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //         child: _buildProjects(),
-  //       //         isDarkMode: widget.isDarkMode,
-  //       //         key: _sectionKeys['projects'],
-  //       //       ),
-  //       //       const SizedBox(height: 20),
-  //       //       GlassCard(
-  //       //         child: _buildEducation(),
-  //       //         isDarkMode: widget.isDarkMode,
-  //       //         key: _sectionKeys['education'],
-  //       //       ),
-  //       //     ],
-  //       //   ),
-  //       // ),
-  //     ),
-  //   );
-  // }
-
-  /// G L A S S   E F E C T   R E S U M E
-// class ResumeScreen extends StatelessWidget {
-//   const ResumeScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Ibrahim Lokman'),
-//         backgroundColor: Colors.transparent,
-//         elevation: 0,
-//         flexibleSpace: ClipRect(
-//           child: BackdropFilter(
-//             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-//             child: Container(color: Colors.transparent),
-//           ),
-//         ),
-//       ),
-//       extendBodyBehindAppBar: true,
-//       body: Container(
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             begin: Alignment.topLeft,
-//             end: Alignment.bottomRight,
-//             colors: [Colors.blue[200]!, Colors.purple[200]!],
-//           ),
-//         ),
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               GlassCard(child: _buildContactInfo()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildCareerObjective()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildSkills()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildWorkExperience()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildOnlineCourses()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildAchievement()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildProjects()),
-//               const SizedBox(height: 20),
-//               GlassCard(child: _buildEducation()),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-  ///  N O R M A L
-// class ResumeScreen extends StatelessWidget {
-//   const ResumeScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Ibrahim Lokman'),
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             _buildContactInfo(),
-//             const SizedBox(height: 20),
-//             _buildCareerObjective(),
-//             const SizedBox(height: 20),
-//             _buildSkills(),
-//             const SizedBox(height: 20),
-//             _buildWorkExperience(),
-//             const SizedBox(height: 20),
-//             _buildOnlineCourses(),
-//             const SizedBox(height: 20),
-//             _buildAchievement(),
-//             const SizedBox(height: 20),
-//             _buildProjects(),
-//             const SizedBox(height: 20),
-//             _buildEducation(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
   Widget _buildContactInfo() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Ibrahim Lokman',
+        const Text('Ibrahim Lokman',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        SizedBox(height: 10),
-        Text('Email: ibrahimlokman.bd@gmail.com'),
-        Text('Phone: +8801625218406'),
-        Text('Address: Aftabnagar, Dhaka'),
-        Text('LinkedIn: linkedin.com/in/ibrahim-lokman'),
-        Text('Github: github.com/Ibrahim-Lokman'),
-        Text('DataCamp: app.datacamp.com/profile/ibrahimlokman'),
-        Text('Leetcode: leetcode.com/ibrahim_lokman/'),
+        const Text('Aftabnagar, Dhaka'),
+        const SizedBox(height: 10),
+        _buildClickableText('Email: ibrahimlokman.bd@gmail.com',
+            'mailto:ibrahimlokman.bd@gmail.com'),
+        _buildClickableText('Phone: +8801625218406', 'tel:+8801625218406'),
+        _buildClickableText('LinkedIn: linkedin.com/in/ibrahim-lokman',
+            'https://linkedin.com/in/ibrahim-lokman'),
+        _buildClickableText('Github: github.com/Ibrahim-Lokman',
+            'https://github.com/Ibrahim-Lokman'),
+        _buildClickableText('DataCamp: app.datacamp.com/profile/ibrahimlokman',
+            'https://app.datacamp.com/profile/ibrahimlokman'),
+        _buildClickableText('Leetcode: leetcode.com/ibrahim_lokman/',
+            'https://leetcode.com/ibrahim_lokman/'),
       ],
     );
+  }
+
+  Widget _buildClickableText(String text, String url) {
+    return InkWell(
+      onTap: () => _launchUrl(url),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Chip(
+          label: Text(
+            text,
+            style: const TextStyle(
+              //      color: Colors.blue,
+              decoration: TextDecoration.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _launchUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (kIsWeb) {
+      // Running on web
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, webOnlyWindowName: '_blank');
+      } else {
+        throw 'Could not launch $url';
+      }
+    } else {
+      // Running on mobile or desktop
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
   }
 
   Widget _buildSkills() {
@@ -520,6 +302,107 @@ class _ResumeScreenState extends State<ResumeScreen> {
       ],
     );
   }
+  // Widget _buildWorkExperience() {
+  //   final List<Widget> experienceCards = [
+  //     _buildExperienceCard(
+  //       'Software Engineer',
+  //       'Innospace Infotech Limited',
+  //       'Feb 10, 2024 - Present',
+  //       ['Working on a CRM App. (Bloc)', 'Working on an EdTech App. (Bloc)'],
+  //     ),
+  //     _buildExperienceCard(
+  //       'Trainee Software Engineer (Flutter)',
+  //       'RedDot Digital Limited',
+  //       'June 1, 2023 - Jan 15, 2024',
+  //       [
+  //         'Worked on a Sales Force Automation SaaS app. (GetX)',
+  //         'Worked on an E-learning app. (GetX)',
+  //         'Worked on Manual Attendance and Leave Request features of Human Resources Information System (HRIS) app (GetX)',
+  //       ],
+  //     ),
+  //     _buildExperienceCard(
+  //       'Intern Software Engineering',
+  //       'RedDot Digital Limited',
+  //       'January 23, 2023 - May 23, 2023',
+  //       [
+  //         'Worked on PMS Planning feature of Human Resources Information System (HRIS) app.'
+  //       ],
+  //     ),
+  //   ];
+
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       const Text('Work Experience',
+  //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+  //       const SizedBox(height: 20),
+  //       ConstrainedBox(
+  //         constraints: const BoxConstraints(
+  //           maxWidth: double.infinity,
+  //           minWidth: double.infinity,
+  //           minHeight: 100,
+  //           maxHeight: 300,
+  //         ), // Adjust this value as needed
+  //         child: CarouselSlider(
+  //           options: CarouselOptions(
+  //             enlargeCenterPage: false,
+  //             autoPlay: true,
+  //             aspectRatio: 16 / 9,
+  //             autoPlayCurve: Curves.fastOutSlowIn,
+  //             enableInfiniteScroll: true,
+  //             autoPlayAnimationDuration: const Duration(milliseconds: 300),
+  //             viewportFraction: 0.5,
+  //           ),
+  //           items: experienceCards,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildExperienceCard(String title, String company, String duration,
+  //     List<String> responsibilities) {
+  //   return Card(
+  //     elevation: 4,
+  //     margin: const EdgeInsets.all(10),
+  //     child: SingleChildScrollView(
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(16),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(title,
+  //                 style: const TextStyle(
+  //                     fontSize: 18, fontWeight: FontWeight.bold)),
+  //             const SizedBox(height: 8),
+  //             Text(company,
+  //                 style: const TextStyle(
+  //                     fontSize: 16, fontStyle: FontStyle.italic)),
+  //             Text(duration,
+  //                 style: const TextStyle(fontSize: 14, color: Colors.grey)),
+  //             const SizedBox(height: 12),
+  //             ...responsibilities
+  //                 .map((resp) => Padding(
+  //                       padding: const EdgeInsets.only(bottom: 4),
+  //                       child: Row(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           const Text('• ',
+  //                               style: TextStyle(
+  //                                   fontSize: 14, fontWeight: FontWeight.bold)),
+  //                           Expanded(
+  //                               child: Text(resp,
+  //                                   style: const TextStyle(fontSize: 14))),
+  //                         ],
+  //                       ),
+  //                     ))
+  //                 .toList(),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildJobEntry(String title, String company, String duration,
       List<String> responsibilities) {
@@ -528,11 +411,26 @@ class _ResumeScreenState extends State<ResumeScreen> {
       children: [
         Text(title,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        // Container(
+        //   padding: const EdgeInsets.all(5),
+        //   decoration: BoxDecoration(
+        //     color: Colors.black,
+        //     borderRadius: BorderRadius.circular(5),
+        //   ),
+        //   child: Image.asset(
+        //     'assets/images/innospace_logo.png',
+        //     height: 50,
+        //     fit: BoxFit.contain,
+        //   ),
+        // ),
         Text(company,
-            style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic)),
+            style: const TextStyle(
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+            )),
         Text(duration, style: const TextStyle(fontSize: 14)),
         const SizedBox(height: 5),
-        ...responsibilities.map((r) => Text('• $r')).toList(),
+        ...responsibilities.map((r) => Text('• $r')),
       ],
     );
   }
